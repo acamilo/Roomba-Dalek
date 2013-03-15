@@ -8,11 +8,20 @@
      <script src="/static/jquery.mobile-1.3.0.min.js"></script>
        <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
      <script src="/static/jquery.ui.touch-punch.min.js"></script>
+<script src="static/virtualjoystick.js"></script>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
   <style>
-  #draggable { width: 50px; height: 50px; padding: 0px;background: white; }
-  #joystick { background: black; width: 273px; height: 200px;}
+	#container {
+width	: 100%;
+height	: 200px;
+background: black;
+overflow	: hidden;
+padding	: 0;
+margin	: 0;
+-webkit-user-select	: none;
+-moz-user-select	: none;
+}
   </style>
 
 </head> 
@@ -24,14 +33,44 @@
           <a href="/sounds/" class="ui-btn-right">Soundboard</a>
 	</div><!-- /header -->
 
-	<div data-role="content">	
+	<div data-role="content">
+    <img id="feed" src="/static/output.jpeg" />	
 {% if position == 0 %}
-    <h1>Your turn to drive!</h1>
-          <div id="joystick">
-				<div id="draggable" class="ui-widget-content">
-				hello
-				</div>
-		  </div>
+
+
+
+<div id="container"></div>
+	<script>
+console.log("touchscreen is", VirtualJoystick.touchScreenAvailable() ? "available" : "not available");
+var joystick	= new VirtualJoystick({
+container	: document.getElementById('container'),
+mouseSupport	: true
+});
+
+var posx = 0;
+var posy = 0;
+var oldx = 0;
+var oldy = 0;
+
+$( "#container" ).height($(window).height()/4);
+
+setInterval(function(){
+                    posx = joystick.deltaX();
+                    posy = joystick.deltaY();
+			    // update if position changes
+			    if (posx != oldx | posy != oldy){ 
+
+				    oldx = posx; oldy = posy;
+                    console.log('/drive/'+posx+'/'+posy+'');
+				    $.getJSON('/drive/'+posx+'/'+posy+'',null);
+			    }
+},100);
+
+
+</script>
+
+
+
 <a href="/done" data-role="button">I'm Done!</a> 
 {% else %}
 
@@ -47,7 +86,7 @@
 
 </body>
 {% if position == 0 %}
-     <script src="/static/joystick.js"></script>
+
 {% else %}
     <script>
         // Are we driving or waiting?
@@ -67,4 +106,11 @@
 
     </script>
 {% endif %}
+
+<script>
+setInterval(function(){
+d = new Date();
+$("#feed").attr("src", "/static/output.jpeg?"+d.getTime());
+},200)
+</script>
 </html>
