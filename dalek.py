@@ -6,7 +6,7 @@ import glob
 import string
 import math
 import time
-import roombaSCI
+import RoombaSCI
 app = Flask(__name__)
 
 clients = []
