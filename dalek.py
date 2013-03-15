@@ -36,12 +36,14 @@ def give_up_control():
     try:
         clients.remove(request.remote_addr)
         print "Client %s has given up control" % (request.remote_addr)
-        return ""
+        return render_template("spectator.html")
     except ValueError:
         print "Client %s attempted to give up control but was not on the list"
-        return ""
+        return render_template("spectator.html")
     
-
+@app.route('/drive/')
+def drive_widget():
+    return render_template("drive.html")
 
 # The Driving URL. 
 @app.route('/drive/<string:arc>/<string:speed>')

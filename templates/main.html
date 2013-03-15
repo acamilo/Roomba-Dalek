@@ -8,20 +8,18 @@
      <script src="/static/jquery.mobile-1.3.0.min.js"></script>
        <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
      <script src="/static/jquery.ui.touch-punch.min.js"></script>
-<script src="static/virtualjoystick.js"></script>
+<script src="/static/virtualjoystick.js"></script>
+
 
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
   <style>
-	#container {
-width	: 100%;
-height	: 200px;
-background: black;
-overflow	: hidden;
-padding	: 0;
-margin	: 0;
--webkit-user-select	: none;
--moz-user-select	: none;
-}
+    #feed {
+        max-width: 600px;
+    }
+    #drive {
+        width: 100%;
+    }
+
   </style>
 
 </head> 
@@ -29,49 +27,16 @@ margin	: 0;
 <body> 
 <div data-role="page" id="drive">
 	<div data-role="header">
-		<h1>Drive Around</h1>
+        <a href="/done" class="ui-btn-left">Finish Driving</a>
+<h1> Drive</h1>
           <a href="/sounds/" class="ui-btn-right">Soundboard</a>
 	</div><!-- /header -->
 
-	<div data-role="content">
-    <img id="feed" src="/static/output.jpeg" />	
+	<div data-role="content" text-align="center">
+
+    <img id="feed" src="http://192.168.1.103:8080/?action=stream" width="100%">
 {% if position == 0 %}
-
-
-
-<div id="container"></div>
-	<script>
-console.log("touchscreen is", VirtualJoystick.touchScreenAvailable() ? "available" : "not available");
-var joystick	= new VirtualJoystick({
-container	: document.getElementById('container'),
-mouseSupport	: true
-});
-
-var posx = 0;
-var posy = 0;
-var oldx = 0;
-var oldy = 0;
-
-$( "#container" ).height($(window).height()/4);
-
-setInterval(function(){
-                    posx = joystick.deltaX();
-                    posy = joystick.deltaY();
-			    // update if position changes
-			    if (posx != oldx | posy != oldy){ 
-
-				    oldx = posx; oldy = posy;
-                    console.log('/drive/'+posx+'/'+posy+'');
-				    $.getJSON('/drive/'+posx+'/'+posy+'',null);
-			    }
-},100);
-
-
-</script>
-
-
-
-<a href="/done" data-role="button">I'm Done!</a> 
+<iframe id="drive" src="/drive"  width="100%" height="100%" />
 {% else %}
 
         <h1>Sit tight!</h1>
@@ -107,10 +72,5 @@ setInterval(function(){
     </script>
 {% endif %}
 
-<script>
-setInterval(function(){
-d = new Date();
-$("#feed").attr("src", "/static/output.jpeg?"+d.getTime());
-},200)
-</script>
+
 </html>
