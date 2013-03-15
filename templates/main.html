@@ -25,19 +25,46 @@
 	</div><!-- /header -->
 
 	<div data-role="content">	
-
-          <canvas id="myCanvas" height="50%"></canvas>	
-		<p>Page content goes here.</p>	
+{% if position == 0 %}
+    <h1>Your turn to drive!</h1>
           <div id="joystick">
-<div id="draggable" class="ui-widget-content">
-hello
-</div>
-</div>
+				<div id="draggable" class="ui-widget-content">
+				hello
+				</div>
+		  </div>
+<a href="/done" data-role="button">I'm Done!</a> 
+{% else %}
+
+        <h1>Sit tight!</h1>
+        <p>you are position <em id="position">{{position}}</em> in line!<p>
+        <a href="/done" data-role="button">Leave Line</a> 
+{% endif %}
+
 	</div><!-- /content -->
 
 </div><!-- /page -->
 
 
 </body>
+{% if position == 0 %}
      <script src="/static/joystick.js"></script>
+{% else %}
+    <script>
+        // Are we driving or waiting?
+
+        // Check to see if our position in the queue changes
+        setInterval(function(){
+            $.getJSON('/position',function(data){
+                if (data.position==0 ){
+                    // It's our turn! Lets refresh the page!
+                    setTimeout('location.reload()', 2000);
+                } else {
+                    // Update the counter
+                    $("#position").html(data.position);
+                }
+            })
+        },5000);
+
+    </script>
+{% endif %}
 </html>
