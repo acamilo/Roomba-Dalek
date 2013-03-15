@@ -4,6 +4,9 @@ from flask import render_template
 import os
 import glob
 import string
+import math
+import time
+import roombaSCI
 app = Flask(__name__)
 
 clients = []
@@ -46,12 +49,31 @@ def drive_widget():
     return render_template("drive.html")
 
 # The Driving URL. 
-@app.route('/drive/<string:arc>/<string:speed>')
-def drive(arc,speed):
+@app.route('/drive/<string:dx>/<string:dy>')
+def drive(dx,dy):
+    dx = float(dx)
+    dy = float(dy)
     try:
         #Are they the head of the queue?
         if clients.index(request.remote_addr)==0:
-            print '%s: Arc:%0.2f Speed:%0.2f' % (request.remote_addr,float(arc),float(speed))
+            print '%s: dx:%0.2f dy:%0.2f' % (request.remote_addr,float(dx),float(dy))
+            if math.fabs(dx)<20:
+                if dy>20:
+                    print "driving backwards"
+                    r.backward()
+                elif dy<-20:
+                    print "driving forwards"   
+                    r.forward()
+                else:
+                    print "Stopping"
+                    r.stop()
+            else:
+                if dx>0:
+                    print "Turning Right!"
+                    r.right()
+                else:
+                    print "Turning Left!"
+                    r.left();
             return ""
         else:
             print "Wait Your Turn!"
@@ -66,22 +88,28 @@ def show_sounds():
     # show the post with the given id, the id is an integer
      sounds=[]
      for b in glob.glob("sounds/*.mp3"):
-          sounds.append(os.path.splitext(os.path.basename(b))[0])
+        sounds.append(os.path.splitext(os.path.basename(b))[0])
      return render_template('show_sounds.html', sounds=sounds)
-
 #Play Sound URL
 @app.route('/sounds/<string:sound>')
 def play_sound(sound):
     # show the post with the given id, the id is an integer
-     sanitized_sound = ''.join(c for c in sound if c in ("-_.() %s%s" % (string.ascii_letters, string.digits)))
-     
-     os.system("mpg321 sounds/%s.mp3 & " % sanitized_sound.replace(' ','\ '))
-     
-     return 'playing sound %s' % sanitized_sound
+    sanitized_sound = ''.join(c for c in sound if c in ("-_.() %s%s" % (string.ascii_letters, string.digits)))
+    os.system("mpg321 sounds/%s.mp3 & " % sanitized_sound.replace(' ','\ ') )
+    return 'playing sound %s' % sanitized_sound
+
 
 
 
 if __name__ == '__main__':
+    #connect to robot    
+
+    r = RoombaSCI.RoombaAPI("/dev/ttyAMA0",57600)
+    time.sleep(1)
+    r.start()
+    time.sleep(1)
+    r.full()
+    time.sleep(1)
     app.run(debug=True , host='0.0.0.0')
 
 
