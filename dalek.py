@@ -103,7 +103,7 @@ def play_sound(sound):
 
 if __name__ == '__main__':
     #connect to robot    
-
+    os.system("mjpg_streamer -i \"/usr/lib/input_uvc.so -d /dev/video0 -f 5 -y\" -o \"/usr/lib/output_http.so -p 8090 -w /home/pi/tmp/mjpg-streamer/mjpg-streamer/www/\" &")
     r = RoombaSCI.RoombaAPI("/dev/ttyAMA0",57600)
     time.sleep(1)
     r.start()
