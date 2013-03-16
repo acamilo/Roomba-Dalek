@@ -48,6 +48,7 @@ def give_up_control():
 def drive_widget():
     return render_template("drive.html")
 
+
 # The Driving URL. 
 @app.route('/drive/<string:dx>/<string:dy>')
 def drive(dx,dy):
@@ -102,8 +103,9 @@ def play_sound(sound):
 
 
 if __name__ == '__main__':
-    #connect to robot    
+    #fire up webcam
     os.system("mjpg_streamer -i \"/usr/lib/input_uvc.so -d /dev/video0 -f 5 -y\" -o \"/usr/lib/output_http.so -p 8090 -w /home/pi/tmp/mjpg-streamer/mjpg-streamer/www/\" &")
+    #connect to robot    
     r = RoombaSCI.RoombaAPI("/dev/ttyAMA0",57600)
     time.sleep(1)
     r.start()
