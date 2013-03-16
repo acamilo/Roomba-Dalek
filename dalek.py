@@ -48,6 +48,10 @@ def give_up_control():
 def drive_widget():
     return render_template("drive.html")
 
+@app.route('/shutdown')
+def shutdown():
+    os.system("sudo shutdown -h now")
+    return "Goodbye!"
 
 # The Driving URL. 
 @app.route('/drive/<string:dx>/<string:dy>')
