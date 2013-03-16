@@ -60,20 +60,20 @@ def drive(dx,dy):
             if math.fabs(dx)<20:
                 if dy>20:
                     print "driving backwards"
-                    #r.backward()
+                    r.backward()
                 elif dy<-20:
                     print "driving forwards"   
-                    #r.forward()
+                    r.forward()
                 else:
                     print "Stopping"
-                    #r.stop()
+                    r.stop()
             else:
                 if dx>0:
                     print "Turning Right!"
-                    #r.right()
+                    r.right()
                 else:
                     print "Turning Left!"
-                    #r.left();
+                    r.left();
             return ""
         else:
             print "Wait Your Turn!"
@@ -103,12 +103,12 @@ def play_sound(sound):
 
 if __name__ == '__main__':
     #connect to robot    
-    #os.system("mjpg_streamer -i \"/usr/lib/input_uvc.so -d /dev/video0 -f 5 -y\" -o \"/usr/lib/output_http.so -p 8090 -w /home/pi/tmp/mjpg-streamer/mjpg-streamer/www/\" &")
-    #r = RoombaSCI.RoombaAPI("/dev/ttyAMA0",57600)
+    os.system("mjpg_streamer -i \"/usr/lib/input_uvc.so -d /dev/video0 -f 5 -y\" -o \"/usr/lib/output_http.so -p 8090 -w /home/pi/tmp/mjpg-streamer/mjpg-streamer/www/\" &")
+    r = RoombaSCI.RoombaAPI("/dev/ttyAMA0",57600)
     time.sleep(1)
-    #r.start()
+    r.start()
     time.sleep(1)
-    #r.full()
+    r.full()
     time.sleep(1)
     app.run(debug=True , host='0.0.0.0')
 
